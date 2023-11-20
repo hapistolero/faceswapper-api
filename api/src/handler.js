@@ -1,4 +1,6 @@
 const { spawn } = require('child_process');
+const path = require('path');
+const scriptPath = path.join(__dirname, '../../roop/run.py');
 
 const faceSwapHandler = async (request, h) => {
     const { source, target } = request.payload;
@@ -14,7 +16,7 @@ const faceSwapHandler = async (request, h) => {
 
     try {
         await new Promise((resolve, reject) => {
-            const pythonProcess = spawn('python', ['C:/Users/hafiz ilham ardana/Documents/programing/roop/roop/run.py', '-s', `${source}`, '-t', `${target}`, '-o', outputName]);
+            const pythonProcess = spawn('python', [scriptPath, '-s', `${source}`, '-t', `${target}`, '-o', outputName]);
 
             pythonProcess.stdout.on('data', (data) => {
                 console.log(`Python script output: ${data}`);
@@ -30,36 +32,21 @@ const faceSwapHandler = async (request, h) => {
                     resolve();
                 } else {
                     console.error(`Python script process exited with code ${code}`);
-                    reject('Gagal melakukan faceswap');
+                    reject('Gagal melakukan faceswap1');
                 }
             });
-        }).then(()=>
-        {
-            const response = h.response({
-                message: 'Face swap berhasil',
-                result: outputName
-            });
-            return response;
-        }
-        ).catch((err)=>{
-            console.log(err.message)
-            const errorResponse = h.response({
-                error: err || 'Gagal melakukan faceswap'
-            }).code(500); // Set appropriate HTTP error code
-            return errorResponse;
         });
-        
-        console.log(err.message)
-        const errorResponse = h.response({
-            error: err || 'Gagal melakukan faceswap'
-        }).code(500); // Set appropriate HTTP error code
-        return errorResponse;
 
-        
+        const response = h.response({
+            message: 'Face swap berhasil',
+            result: outputName
+        });
+        return response;
         
     } catch (error) {
+        console.log('Error:', error.message);
         const errorResponse = h.response({
-            error: error || 'Gagal melakukan faceswap'
+            error: error || 'Gagal melakukan faceswap3'
         }).code(500); // Set appropriate HTTP error code
         return errorResponse;
     }
